@@ -1,25 +1,45 @@
-import java.util.*;
-
 public class StudentManagement {
-    private List<Student> students = new ArrayList<Student>();
+    private Student[] students = new Student[150];
+    private static int count = 0;
 
+    /**
+     * Compare Group.
+     * @param s1 First variable.
+     * @param s2 Second variable.
+     * @return sameGroup
+     */
     public static boolean sameGroup(Student s1, Student s2) {
-        return (s1.getGroup() == s2.getGroup());
+        if (s1.getGroup() == s2.getGroup()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * addStudent.
+     * @param newStudent Parameter.
+     */
     public void addStudent(Student newStudent) {
-        students.add(newStudent);
+        students[count] = newStudent;
+        count += 1;
     }
 
+    /**
+     * studentsByGroup.
+     * @return students By Group
+     */
     public String studentsByGroup() {
         String result = "";
-        String res = "";
-        for(Student s : students) {
-            if(res.indexOf(s.getGroup()) == -1) {
-                res = res.concat(s.getGroup()).concat(" ");
+        boolean[] res = new boolean[150];
+        for (int i = 0; i < count; i++) {
+            Student s = students[i];
+            if (res[i] == false) {
                 result = result.concat(s.getGroup()).concat("\n");
-                for(Student t : students) {
-                    if(t.getGroup() == s.getGroup()) {
+                for (int j = i; j < count; j++) {
+                    Student t = students[j];
+                    if (t.getGroup().equals(s.getGroup())) {
+                        res[j] = true;
                         result = result.concat(t.getInfo()).concat("\n");
                     }
                 }
@@ -28,16 +48,27 @@ public class StudentManagement {
         return result;
     }
 
+    /**
+     * remove Student.
+     * @param id id of student.
+     */
     public void removeStudent(String id) {
-        for(int i = 0; i < students.size(); i++) {
-            Student s = students.get(i);
-            if(s.getId() == id) {
-                students.remove(i);
+        for (int i = 0; i < count; i++) {
+            if (students[i].getId().equals(id)) {
+                for (int j = i; j < count - 1; j++) {
+                    students[j] = students[j + 1];
+                }
+                count -= 1;
+                break;
             }
         }
     }   
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * main method.
+     * @param args Parameter.
+     */
+    public static void main(String[] args) {
         Student s1 = new Student("Nguyen Van An", "17020001", "17020001@vnu.edu.vn");
         Student s2 = new Student("Nguyen Van B", "17020002", "17020002@vnu.edu.vn");
         Student s3 = new Student("Nguyen Van C", "17020003", "17020003@vnu.edu.vn");
@@ -50,8 +81,7 @@ public class StudentManagement {
         SM.addStudent(s3);
         SM.addStudent(s4);
         System.out.println(SM.studentsByGroup());
-        SM.removeStudent("17020002  ");
-        System.out.println(SM.studentsByGroup());
-       
+        SM.removeStudent("17020002");
+        System.out.println(SM.studentsByGroup()); 
     }
 }
